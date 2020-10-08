@@ -35,6 +35,26 @@ public class Module {
     return load(modelPath, Device.CPU);
   }
 
+  /**
+   * Loads a TorchScript module from the given Android Asset Manager
+   */
+  public static Module load(final String assetName,
+                            Object androidAssetManager,
+                            final Device device) {
+    if (!NativeLoader.isInitialized()) {
+      NativeLoader.init(new SystemDelegate());
+    }
+
+    return new Module(new NativePeer(assetName, androidAssetManager, device));
+  }
+
+  /**
+   * Wrapper over Module.Load using the CPU device.
+   */
+  public static Module load(final String assetName, Object androidAssetManager) {
+    return load(assetName, androidAssetManager, Device.CPU);
+  }
+
   Module(INativePeer nativePeer) {
     this.mNativePeer = nativePeer;
   }
